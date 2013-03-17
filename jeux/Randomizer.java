@@ -51,7 +51,9 @@ public class Randomizer {
      */
     public static boolean GenerateRandomBoolean() {
         Random random = new Random();
-        return random.nextBoolean();
+        if(random.nextInt()%10 == 0) return true;
+        //return random.nextBoolean();
+		return false;
     }
 
     /**

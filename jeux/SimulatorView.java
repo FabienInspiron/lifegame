@@ -50,25 +50,15 @@ public class SimulatorView extends JFrame{
         }
 
         stepLabel.setText(STEP_PREFIX + step);
-        //stats.reset();
-
         fieldView.preparePaint();
 
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                //Object animal = field.getObjectAt(row, col);
-                //if (animal != null) {
-                    //stats.incrementCount(animal.getClass());
-                //    fieldView.drawMark(col, row, getColor(animal.getClass()));
-                //} else {
-                    fieldView.drawMark(col, row, red);
-                //}
+                    if(field.getState(row, col)) fieldView.drawMark(col, row, red);
             }
         }
-        //stats.countFinished();
 
         population.setText(POPULATION_PREFIX);
-                //+ stats.getPopulationDetails(field));
         fieldView.repaint();
     }
     

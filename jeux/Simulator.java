@@ -25,14 +25,34 @@ public class Simulator {
     }
     
     // Calculate the next step of the simulation
-    public void nextStep(){
+    public int nextStep(){
+    	int nbcase = 0;
+    	
     	for(int i = 0; i<field.getDepth(); i++){
         	for(int j = 0; j<field.getWidth(); j++){
-        		if(field.getState(i, j)){
-        			
-        		}
+        		if(field.getState(i, j)) nbcase++;
+        		/**
+        		 * Une cellule vide à l'étape n-1 et ayant exactement 3 
+        		 * voisins sera occupée à l'étape suivante. 
+        		 * (naissance liée à un environnement optimal)
+        		 */
+        		if((field.nbAdjacentTrue(i, j)) == 3)
+        			field.place(true, i, j);
+        		
+        		/**
+        		 * Une cellule occupée à l'étape n-1 et ayant 2 ou 3 voisins sera maintenue 
+        		 * à l'étape n sinon elle est vidée. 
+        		 * (destruction par désertification ou surpopulation)
+        		 */
+        		else if((field.nbAdjacentTrue(i, j)) == 2 && field.getState(i, j))
+        			field.place(true, i, j);
+        		
+        		else if((field.nbAdjacentTrue(i, j)) != 2)
+        			field.place(false, i, j);
         	}
-    	} 	
+    	}
+    	
+    	return nbcase;
     }
     
     /**
@@ -47,16 +67,12 @@ public class Simulator {
     }
     
     public static void main(String[] args) {
-    	  // Game initialization
         Simulator sim = new Simulator(50,50);
-        //sim.init();
-        //System.out.println("Game starts with " + sim.nbHumansAlive() + " humans!");
-        // Iterate until no alive human remains
         int day = 0;
-        while (day<100) {
-
-            sim.nextStep();
-
+        while (day<0) {
+            int nb = sim.nextStep();
+            System.out.println("nombre : " + nb);
+            
             // Show the starting state in the view.
             sim.view.showStatus(day, sim.field);
 
@@ -69,8 +85,7 @@ public class Simulator {
 
             day++;
         }
-        
-        System.out.println("All humans have been eaten by day " + day + "th");
+  
         sim.view.showStatus(day, sim.field);
 	}
 }
