@@ -18,6 +18,8 @@ public class SimulatorView extends JFrame{
 	private JLabel stepLabel, population;
 	private FieldView fieldView;
     
+	private Color red = Color.red;
+	
     public SimulatorView(int height, int width) {
     	setTitle("Jeux de la vie");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
@@ -33,6 +35,42 @@ public class SimulatorView extends JFrame{
         pack();
         setVisible(true);
 	}
+    
+    /**
+     * Show the current status of the field.
+     * 
+     * @param step
+     *            Which iteration step it is.
+     * @param field
+     *            The field whose status is to be displayed.
+     */
+    public void showStatus(int step, Field field) {
+        if (!isVisible()) {
+            setVisible(true);
+        }
+
+        stepLabel.setText(STEP_PREFIX + step);
+        //stats.reset();
+
+        fieldView.preparePaint();
+
+        for (int row = 0; row < field.getDepth(); row++) {
+            for (int col = 0; col < field.getWidth(); col++) {
+                //Object animal = field.getObjectAt(row, col);
+                //if (animal != null) {
+                    //stats.incrementCount(animal.getClass());
+                //    fieldView.drawMark(col, row, getColor(animal.getClass()));
+                //} else {
+                    fieldView.drawMark(col, row, red);
+                //}
+            }
+        }
+        //stats.countFinished();
+
+        population.setText(POPULATION_PREFIX);
+                //+ stats.getPopulationDetails(field));
+        fieldView.repaint();
+    }
     
     private class FieldView extends JPanel {
         private final int GRID_VIEW_SCALING_FACTOR = 6;
