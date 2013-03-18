@@ -30,25 +30,32 @@ public class Simulator {
     	
     	for(int i = 0; i<field.getDepth(); i++){
         	for(int j = 0; j<field.getWidth(); j++){
+        		int nbadj = field.nbAdjacentTrue(i, j);
         		if(field.getState(i, j)) nbcase++;
+
         		/**
         		 * Une cellule vide à l'étape n-1 et ayant exactement 3 
         		 * voisins sera occupée à l'étape suivante. 
         		 * (naissance liée à un environnement optimal)
         		 */
-        		if((field.nbAdjacentTrue(i, j)) == 3)
+        		if(nbadj == 3){
         			field.place(true, i, j);
+        			System.out.print("+"+nbadj);
+        		}
         		
         		/**
         		 * Une cellule occupée à l'étape n-1 et ayant 2 ou 3 voisins sera maintenue 
         		 * à l'étape n sinon elle est vidée. 
         		 * (destruction par désertification ou surpopulation)
         		 */
-        		else if((field.nbAdjacentTrue(i, j)) == 2 && field.getState(i, j))
+        		else if(nbadj == 2 && field.getState(i, j)){
         			field.place(true, i, j);
-        		
-        		else if((field.nbAdjacentTrue(i, j)) != 2)
+        			System.out.print("+"+nbadj);
+        		}
+        		else{ 
         			field.place(false, i, j);
+        			System.out.print("-"+nbadj);
+        		}
         	}
     	}
     	
@@ -69,7 +76,7 @@ public class Simulator {
     public static void main(String[] args) {
         Simulator sim = new Simulator(50,50);
         int day = 0;
-        while (day<0) {
+        while (day<2) {
             int nb = sim.nextStep();
             System.out.println("nombre : " + nb);
             

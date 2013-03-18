@@ -1,6 +1,4 @@
 package jeux;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,23 +51,39 @@ public class Field {
 	 * @return nombre d'element
 	 */
 	public int nbAdjacentTrue(int i, int j) {
-		int row = i;
-		int col = j;
-		int nb = 0;
-		
-		for (int roffset = -1; roffset <= 1; roffset++) {
-			int nextRow = row + roffset;
-			if (nextRow >= 0 && nextRow < depth) {
-				for (int coffset = -1; coffset <= 1; coffset++) {
-					int nextCol = col + coffset;
-					// Exclude invalid locations and the original location.
-					if (nextCol >= 0 && nextCol < width
-							&& (roffset != 0 || coffset != 0)) {
-						if(field[i][j]) nb++;
-					}
-				}
-			}
-		}
-		return nb;
+		return adjacentLocations(new Location(i, j)).size();
 	}
+	
+	/**
+     * Return a shuffled list of locations adjacent to the given one. The list
+     * will not include the location itself. All locations will lie within the
+     * grid.
+     * 
+     * @param location
+     *            The location from which to generate adjacencies.
+     * @return A list of locations adjacent to that given.
+     */
+    public List<Location> adjacentLocations(Location location) {
+        assert location != null : "Null location passed to adjacentLocations";
+        // The list of locations to be returned.
+        List<Location> locations = new LinkedList<Location>();
+        if (location != null) {
+            int row = location.getRow();
+            int col = location.getCol();
+            for (int roffset = -1; roffset <= 1; roffset++) {
+                int nextRow = row + roffset;
+                if (nextRow >= 0 && nextRow < depth) {
+                    for (int coffset = -1; coffset <= 1; coffset++) {
+                        int nextCol = col + coffset;
+                        // Exclude invalid locations and the original location.
+                        if (nextCol >= 0 && nextCol < width
+                                && (roffset != 0 || coffset != 0)) {
+                            if(field[row][col]) locations.add(new Location(nextRow, nextCol));
+                        }
+                    }
+                }
+            }
+        }
+        return locations;
+    }
 }
