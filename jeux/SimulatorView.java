@@ -55,6 +55,7 @@ public class SimulatorView extends JFrame{
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
                     if(field.getState(row, col)) fieldView.drawMark(col, row, red);
+                    else fieldView.drawMark(col, row, Color.white);
             }
         }
 

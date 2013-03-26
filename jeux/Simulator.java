@@ -28,10 +28,12 @@ public class Simulator {
     public int nextStep(){
     	int nbcase = 0;
     	
-    	for(int i = 0; i<field.getDepth(); i++){
-        	for(int j = 0; j<field.getWidth(); j++){
-        		int nbadj = field.nbAdjacentTrue(i, j);
-        		if(field.getState(i, j)) nbcase++;
+    	Field tmp = new Field(field);
+    	
+    	for(int i = 0; i<tmp.getDepth(); i++){
+        	for(int j = 0; j<tmp.getWidth(); j++){
+        		int nbadj = tmp.nbAdjacentTrue(i, j);
+        		if(tmp.getState(i, j)) nbcase++;
 
         		/**
         		 * Une cellule vide à l'étape n-1 et ayant exactement 3 
@@ -76,7 +78,7 @@ public class Simulator {
     public static void main(String[] args) {
         Simulator sim = new Simulator(50,50);
         int day = 0;
-        while (day<2) {
+        while (day<50) {
             int nb = sim.nextStep();
             System.out.println("nombre : " + nb);
             
