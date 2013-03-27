@@ -42,7 +42,6 @@ public class Simulator {
         		 */
         		if(nbadj == 3){
         			field.place(true, i, j);
-        			System.out.print("+"+nbadj);
         		}
         		
         		/**
@@ -52,11 +51,9 @@ public class Simulator {
         		 */
         		else if(nbadj == 2 && field.getState(i, j)){
         			field.place(true, i, j);
-        			System.out.print("+"+nbadj);
         		}
         		else{ 
         			field.place(false, i, j);
-        			System.out.print("-"+nbadj);
         		}
         	}
     	}
