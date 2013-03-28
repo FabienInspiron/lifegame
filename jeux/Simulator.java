@@ -1,5 +1,7 @@
 package jeux;
 
+import sun.font.CreatedFontTracker;
+
 public class Simulator {
     // The current state of the field.
     private Field field;
@@ -72,13 +74,26 @@ public class Simulator {
         view.showStatus(step, field);
     }
     
+    public void createThread(){
+    	Field tmp = new Field(field);
+    	for(int i = 0; i<tmp.getDepth(); i++){
+        	for(int j = 0; j<tmp.getWidth(); j++){
+                SimulationThreadFull thread = new SimulationThreadFull(field, i, j);
+                thread.run();
+                System.out.print("t");
+        	}
+        }
+    }
+    
     public static void main(String[] args) {
         Simulator sim = new Simulator(50,50);
+        
         int day = 0;
         while (day<50) {
-            int nb = sim.nextStep();
-            System.out.println("nombre : " + nb);
-            
+            //int nb = sim.nextStep();
+            //System.out.println("nombre : " + nb);
+        	sim.createThread();
+        	
             // Show the starting state in the view.
             sim.view.showStatus(day, sim.field);
 
