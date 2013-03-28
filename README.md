@@ -13,3 +13,14 @@ Pour représenter ce problème nous utiliserons une matrice de taille n+2, avec 
     0   La    0
     0 Matrice 0
     0 0 0 0 0 0
+
+## Méthode
+
+### Methode 100% centralisée
+Dans cette méthode on utilisera un seul thread, le thread principal qui va faire de manière iterative le calcul de chaque nouvelle case.
+
+### Méthode 100% partagé
+Dans cette méthode on utilise un thread par case. On doit donc utlisé un système de synchronisation (voir par rendez-vous).
+
+### Méthode combiné
+
