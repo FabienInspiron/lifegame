@@ -1,6 +1,18 @@
 package jeux;
 
-
+/*
+ * Field représente la grille du jeux.
+ * Elle est représentée par une matrice de taille n+2 
+ * car on ajoute un ligne de 0 autour de la matrice pour
+ * Que le calcul des cases sur les bords soit plus simple.
+ * Exemple de matrice 4x4 :
+ * 0 0 0 0 0 0
+ * 0 		 0
+ * 0 Matrice 0
+ * 0  Réelle 0
+ * 0         0
+ * 0 0 0 0 0 0
+ */
 public class Field {
 	// The depth and width of the field.
     private int depth, width;
