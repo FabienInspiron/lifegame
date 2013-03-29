@@ -5,34 +5,87 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JButton;
 
 
-public class SimulatorView extends JFrame{
+public class SimulatorView extends JPanel {
     private final String STEP_PREFIX = "Step: ";
     private final String POPULATION_PREFIX = "Population: ";
-	
-	private JLabel stepLabel, population;
 	private FieldView fieldView;
+
+	private Simulator hook;
     
 	private Color red = Color.red;
+	private JLabel lblPopulation;
+	private JLabel lblStep;
 	
-    public SimulatorView(int height, int width) {
-    	setTitle("Jeux de la vie");
-        stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
-        population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
-        
+    public SimulatorView(int height, int width, final Simulator hook) {
+        this.hook = hook;
+    	
+    	
         fieldView = new FieldView(height, width);
+        setLayout(new BorderLayout());
+        add(fieldView, BorderLayout.CENTER);
         
-        Container contents = getContentPane();
-        contents.add(stepLabel, BorderLayout.NORTH);
-        contents.add(fieldView, BorderLayout.CENTER);
-        contents.add(population, BorderLayout.SOUTH);
+        JPanel panelTop = new JPanel();
+        add(panelTop, BorderLayout.NORTH);
         
-        pack();
+        lblPopulation = new JLabel("Population");
+        lblStep = new JLabel("Step");
+        
+        GroupLayout gl_panel = new GroupLayout(panelTop);
+        gl_panel.setHorizontalGroup(
+        	gl_panel.createParallelGroup(Alignment.LEADING)
+        		.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+        			.addContainerGap(118, Short.MAX_VALUE)
+        			.addComponent(lblPopulation)
+        			.addGap(50)
+        			.addComponent(lblStep)
+        			.addGap(172))
+        );
+        gl_panel.setVerticalGroup(
+        	gl_panel.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(gl_panel.createSequentialGroup()
+        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        			.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblPopulation)
+        				.addComponent(lblStep)))
+        );
+        panelTop.setLayout(gl_panel);
+        
+        JPanel panelDown = new JPanel();
+        add(panelDown, BorderLayout.SOUTH);
+        
+        JButton btnRun = new JButton("Run");
+        btnRun.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				hook.live();
+				
+			}
+		});
+        panelDown.add(btnRun);
+        
+        JButton btnStep = new JButton("1 Step");
+        btnStep.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				hook.liveOneStep();				
+			}
+		});
+        
+        panelDown.add(btnStep);
+        
+        validate();
         setVisible(true);
 	}
     
@@ -43,13 +96,14 @@ public class SimulatorView extends JFrame{
      *            Which iteration step it is.
      * @param field
      *            The field whose status is to be displayed.
+     * @param population 
      */
-    public void showStatus(int step, Field field) {
+    public void showStatus(int step, Field field, int population) {
         if (!isVisible()) {
             setVisible(true);
         }
 
-        stepLabel.setText(STEP_PREFIX + step);
+        lblStep.setText(STEP_PREFIX + step);
         fieldView.preparePaint();
 
         for (int row = 0; row < field.getDepth(); row++) {
@@ -59,7 +113,7 @@ public class SimulatorView extends JFrame{
             }
         }
 
-        population.setText(POPULATION_PREFIX);
+        lblPopulation.setText(POPULATION_PREFIX + population);
         fieldView.repaint();
     }
     

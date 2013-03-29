@@ -6,6 +6,7 @@
 .project
 .metadata
 bin/
+build/
 tmp/
 *.tmp
 *.bak
@@ -26,3 +27,5 @@ Thumbs.db
 
 # Folder config file
 Desktop.ini
+/forms-1.3.0.jar
+/forms-1.3.0-src.zip

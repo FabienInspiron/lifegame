@@ -1,22 +1,100 @@
 package jeux;
 
-public class Simulator {
-    // The current state of the field.
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+public class Simulator extends JFrame {
+	// The current state of the field.
     private Field field;
     
+    private SettingPanel opPane;
+    
     // The current step of the simulation.
-    private int step;
+    private int currentStep = 0;
+    
+    // The number of step needed
+    private int numberStep;
     
     // A graphical view of the simulation.
     private SimulatorView view;
     
-    public Simulator(int depth, int width) {
-    	field = new Field(depth, width);
-    	view = new SimulatorView(depth, width);
-    	populate();
+    public Simulator()	{
+    	setTitle("Jeux de la vie");
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	
+    	opPane =  new SettingPanel(this);
+    	setContentPane(opPane);
+    	pack();
+    	setVisible(true);
     }
     
-    public void populate(){
+    public void setConfiguration(int rowNumber, int lineNumber, int stepNumber) {
+    	remove(opPane);
+    	
+    	numberStep =  stepNumber;
+    	
+		field = new Field(rowNumber, lineNumber);
+    	view = new SimulatorView(rowNumber, lineNumber, this);
+    	
+    	setContentPane(view);
+    	revalidate();
+    	pack();
+    	setVisible(true);
+    	view.repaint();
+    	view.revalidate();
+    	populate();
+    	
+    	// Show the starting state in the view.
+        view.showStatus(currentStep, field, 0);
+	}
+
+	public void live() {
+		live(numberStep);	
+	}
+
+	public void live(int stepNumber) {
+		int population = 0;
+    	while (currentStep < stepNumber) {
+    		currentStep++;
+
+    		population = nextStep();
+    		System.out.println("nombre : " + population);
+    		
+    		// Show the starting state in the view.
+    		view.showStatus(currentStep, field, population);
+    		
+    		// Pause in order to let the time to view the situation
+    		try {
+    			Thread.sleep(250);
+    		} catch (InterruptedException e) {
+    			System.err.println("Can't pause the thread.");
+    		}
+    		
+    	}
+    	
+    	view.showStatus(currentStep, field, population);
+	}
+
+	public void liveOneStep()	{
+		if (currentStep < numberStep) {
+			currentStep++;
+
+			int population = nextStep();
+    		System.out.println("nombre : " + population);
+    		
+    		// Show the starting state in the view.
+    		view.showStatus(currentStep, field, population);
+    		
+    		// Pause in order to let the time to view the situation
+    		try {
+    			Thread.sleep(250);
+    		} catch (InterruptedException e) {
+    			System.err.println("Can't pause the thread.");
+    		}
+    	}
+	}
+
+	public void populate(){
     	for(int i = 0; i<field.getDepth(); i++){
         	for(int j = 0; j<field.getWidth(); j++){
         		field.place(Randomizer.GenerateRandomBoolean(), i, j);
@@ -65,33 +143,20 @@ public class Simulator {
      * Reset the simulation to a starting position.
      */
     public void reset() {
-        step = 0;
+        currentStep = 0;
         populate();
 
         // Show the starting state in the view.
-        view.showStatus(step, field);
+        view.showStatus(currentStep, field, 0);
     }
     
     public static void main(String[] args) {
-        Simulator sim = new Simulator(50,50);
-        int day = 0;
-        while (day<50) {
-            int nb = sim.nextStep();
-            System.out.println("nombre : " + nb);
-            
-            // Show the starting state in the view.
-            sim.view.showStatus(day, sim.field);
-
-            // Pause in order to let the time to view the situation
-            try {
-                Thread.sleep(250);
-            } catch (InterruptedException e) {
-                System.err.println("Can't pause the thread.");
+    	SwingUtilities.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+            	Simulator sim = new Simulator();
             }
-
-            day++;
-        }
-  
-        sim.view.showStatus(day, sim.field);
+        });
 	}
 }
