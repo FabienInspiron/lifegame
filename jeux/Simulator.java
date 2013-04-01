@@ -1,12 +1,10 @@
 package jeux;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
-public class Simulator extends JFrame {
+public abstract class Simulator extends JFrame {
 	// The current state of the field.
-    private Field field;
-    
+    protected Field currentField;
     private SettingPanel opPane;
     
     // The current step of the simulation.
@@ -18,35 +16,27 @@ public class Simulator extends JFrame {
     // A graphical view of the simulation.
     private SimulatorView view;
     
-    public Simulator()	{
+    public Simulator(int rowNumber, int lineNumber, int stepNumber)	{
     	setTitle("Jeux de la vie");
-    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	
-    	opPane =  new SettingPanel(this);
-    	setContentPane(opPane);
-    	pack();
-    	setVisible(true);
-    }
-    
-    public void setConfiguration(int rowNumber, int lineNumber, int stepNumber) {
-    	remove(opPane);
+    	//setContentPane(opPane);
+    	
     	
     	numberStep =  stepNumber;
     	
-		field = new Field(rowNumber, lineNumber);
-    	view = new SimulatorView(rowNumber, lineNumber, this);
-    	
-    	setContentPane(view);
-    	revalidate();
-    	pack();
-    	setVisible(true);
-    	view.repaint();
-    	view.revalidate();
+    	// init field
+    	currentField = new Field(rowNumber, lineNumber);
     	populate();
     	
-    	// Show the starting state in the view.
-        view.showStatus(currentStep, field, 0);
-	}
+    	// Add the simulator view to the frame
+    	view = new SimulatorView(rowNumber, lineNumber, this);
+    	add(view);
+    	
+    	setVisible(true);
+    }
+    
+    
 
 	public void live() {
 		live(numberStep);	
@@ -61,7 +51,7 @@ public class Simulator extends JFrame {
     		System.out.println("nombre : " + population);
     		
     		// Show the starting state in the view.
-    		view.showStatus(currentStep, field, population);
+    		view.showStatus(currentStep, currentField, population);
     		
     		// Pause in order to let the time to view the situation
     		try {
@@ -72,7 +62,7 @@ public class Simulator extends JFrame {
     		
     	}
     	
-    	view.showStatus(currentStep, field, population);
+    	view.showStatus(currentStep, currentField, population);
 	}
 
 	public void liveOneStep()	{
@@ -83,7 +73,7 @@ public class Simulator extends JFrame {
     		System.out.println("nombre : " + population);
     		
     		// Show the starting state in the view.
-    		view.showStatus(currentStep, field, population);
+    		view.showStatus(currentStep, currentField, population);
     		
     		// Pause in order to let the time to view the situation
     		try {
@@ -94,49 +84,28 @@ public class Simulator extends JFrame {
     	}
 	}
 
+	/**
+	 * Populate the field randomly
+	 */
 	public void populate(){
-    	for(int i = 0; i<field.getDepth(); i++){
-        	for(int j = 0; j<field.getWidth(); j++){
-        		field.place(Randomizer.GenerateRandomBoolean(), i, j);
+    	for(int i = 0; i<currentField.getDepth(); i++){
+        	for(int j = 0; j<currentField.getWidth(); j++){
+        		currentField.place(Randomizer.GenerateRandomBoolean(), i, j);
         	}
     	}
     }
     
-    // Calculate the next step of the simulation
-    public int nextStep(){
-    	int nbcase = 0;
+	/**
+	 * Calculate the next step of the simulation
+	 * @return The number of people alive
+	 */
+    abstract public int nextStep();
+    
+    /**
+     * Finalize
+     */
+    protected void endSimulation() {
     	
-    	Field tmp = new Field(field);
-    	
-    	for(int i = 0; i<tmp.getDepth(); i++){
-        	for(int j = 0; j<tmp.getWidth(); j++){
-        		int nbadj = tmp.nbAdjacentTrue(i, j);
-        		if(tmp.getState(i, j)) nbcase++;
-
-        		/**
-        		 * Une cellule vide à l'étape n-1 et ayant exactement 3 
-        		 * voisins sera occupée à l'étape suivante. 
-        		 * (naissance liée à un environnement optimal)
-        		 */
-        		if(nbadj == 3){
-        			field.place(true, i, j);
-        		}
-        		
-        		/**
-        		 * Une cellule occupée à l'étape n-1 et ayant 2 ou 3 voisins sera maintenue 
-        		 * à l'étape n sinon elle est vidée. 
-        		 * (destruction par désertification ou surpopulation)
-        		 */
-        		else if(nbadj == 2 && field.getState(i, j)){
-        			field.place(true, i, j);
-        		}
-        		else{ 
-        			field.place(false, i, j);
-        		}
-        	}
-    	}
-    	
-    	return nbcase;
     }
     
     /**
@@ -147,16 +116,7 @@ public class Simulator extends JFrame {
         populate();
 
         // Show the starting state in the view.
-        view.showStatus(currentStep, field, 0);
+        view.showStatus(currentStep, currentField, 0);
     }
     
-    public static void main(String[] args) {
-    	SwingUtilities.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-            	Simulator sim = new Simulator();
-            }
-        });
-	}
 }

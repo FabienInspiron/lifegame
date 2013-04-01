@@ -1,20 +1,17 @@
 package jeux;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 
 public class SimulatorView extends JPanel {
@@ -22,15 +19,14 @@ public class SimulatorView extends JPanel {
     private final String POPULATION_PREFIX = "Population: ";
 	private FieldView fieldView;
 
-	private Simulator hook;
+	//private Simulator hook;
     
 	private Color red = Color.red;
 	private JLabel lblPopulation;
 	private JLabel lblStep;
 	
     public SimulatorView(int height, int width, final Simulator hook) {
-        this.hook = hook;
-    	
+        //this.hook = hook;
     	
         fieldView = new FieldView(height, width);
         setLayout(new BorderLayout());

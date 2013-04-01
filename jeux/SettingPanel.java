@@ -6,30 +6,28 @@ import java.awt.event.ActionListener;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
-import javax.swing.SwingWorker;
+import javax.swing.SwingUtilities;
 
-public class SettingPanel extends JPanel {
+public class SettingPanel extends JFrame {
 	private JTextField txflRowNumber;
 	private JTextField txflLineNumber;
 	private JTextField txflStepNumber;
 	
-	private Simulator hook;
-
 	/**
 	 * Create the option panel.
 	 */
-	public SettingPanel(final Simulator hook) {
-		this.hook = hook;
-		
+	public SettingPanel() {
+		super();
+	    setSize(300, 200);
+		setTitle("Jeu de la vie");
 		JLabel lblNombreDeColonnes = new JLabel("Nombre de colonnes");
-		
 		JLabel lblNombreDeLignes = new JLabel("Nombre de lignes");
-		
 		JLabel lblNombreDtape = new JLabel("Nombre d'étape");
 		
 		txflRowNumber = new JTextField();
@@ -55,12 +53,14 @@ public class SettingPanel extends JPanel {
 				int lineNumber = Integer.parseInt(txflLineNumber.getText());
 				int stepNumber = Integer.parseInt(txflStepNumber.getText());
 				
-				hook.setConfiguration(rowNumber, lineNumber, stepNumber);
-				
+				Simulator sim = new SimulatorLinear(rowNumber, lineNumber, stepNumber);
+				//sim.show();
 			}
 		});
 
-		GroupLayout groupLayout = new GroupLayout(this);
+		JPanel jContentPane = new JPanel();     
+		
+		GroupLayout groupLayout = new GroupLayout(jContentPane);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
@@ -99,7 +99,21 @@ public class SettingPanel extends JPanel {
 					.addComponent(btnOk)
 					.addContainerGap(86, Short.MAX_VALUE))
 		);
-		setLayout(groupLayout);
-
+		//setLayout(groupLayout);
+		
+		 
+		jContentPane.setLayout(groupLayout);
+		setContentPane(jContentPane);
+		
+		pack();
+	}
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+	         public void run() {
+	        	 SettingPanel thisClass = new SettingPanel();
+	               thisClass.setVisible(true);
+	           }
+	      });
 	}
 }
