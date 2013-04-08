@@ -14,6 +14,9 @@ public abstract class Simulator extends JFrame {
     // The number of step needed
     private int numberStep;
     
+    protected int alive;
+    synchronized protected void incAlive() { alive++; }
+    
     // A graphical view of the simulation.
     private SimulatorView view;
     
@@ -31,7 +34,8 @@ public abstract class Simulator extends JFrame {
     	view = new SimulatorView(rowNumber, lineNumber, this);
     	add(view);
     	pack();
-    	view.showStatus(currentStep, currentField, 0);
+    	System.out.println(alive);
+    	view.showStatus(currentStep, currentField, alive);
     	setVisible(true);
     }
     
@@ -44,21 +48,7 @@ public abstract class Simulator extends JFrame {
 	public void live(int stepNumber) {
 		int population = 0;
     	while (currentStep < stepNumber) {
-    		currentStep++;
-
-    		population = nextStep();
-    		System.out.println("nombre : " + population);
-    		
-    		// Show the starting state in the view.
-    		view.showStatus(currentStep, currentField, population);
-    		
-    		// Pause in order to let the time to view the situation
-    		try {
-    			Thread.sleep(250);
-    		} catch (InterruptedException e) {
-    			System.err.println("Can't pause the thread.");
-    		}
-    		
+    		liveOneStep();    		
     	}
     	
     	view.showStatus(currentStep, currentField, population);
@@ -67,12 +57,13 @@ public abstract class Simulator extends JFrame {
 	public void liveOneStep()	{
 		if (currentStep < numberStep) {
 			currentStep++;
-
-			int population = nextStep();
-    		System.out.println("nombre : " + population);
+			
+			alive = 0;
+			nextStep();
+    		System.out.println("nombre : " + alive);
     		
     		// Show the starting state in the view.
-    		view.showStatus(currentStep, currentField, population);
+    		view.showStatus(currentStep, currentField, alive);
     		
     		// Pause in order to let the time to view the situation
     		try {
@@ -89,7 +80,9 @@ public abstract class Simulator extends JFrame {
 	public void populate(){
     	for(int i = 0; i<currentField.getDepth(); i++){
         	for(int j = 0; j<currentField.getWidth(); j++){
-        		currentField.place(Randomizer.GenerateRandomBoolean(), i, j);
+        		boolean b = Randomizer.GenerateRandomBoolean();
+        		currentField.place(b, i, j);
+        		if(b) incAlive();
         	}
     	}
     }
@@ -98,7 +91,7 @@ public abstract class Simulator extends JFrame {
 	 * Calculate the next step of the simulation
 	 * @return The number of people alive
 	 */
-    abstract public int nextStep();
+    abstract public void nextStep();
     
     /**
      * Finalize
@@ -111,11 +104,12 @@ public abstract class Simulator extends JFrame {
      * Reset the simulation to a starting position.
      */
     public void reset() {
+    	alive = 0;
         currentStep = 0;
         populate();
 
         // Show the starting state in the view.
-        view.showStatus(currentStep, currentField, 0);
+        view.showStatus(currentStep, currentField, alive);
     }
     
 }

@@ -4,34 +4,41 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 public class Simulator100Thread extends Simulator {
-	final CyclicBarrier barrier;
+	// Barrière annoncant le début du travail des trheads 
+	final CyclicBarrier barrierStart;
+	// Barrière attendant la fin du travail des threads
+	final CyclicBarrier barrierEnd;
 
 	// The futur state of the field.
 	Field futurField;
 
 	public Simulator100Thread(int rowNumber, int lineNumber, int stepNumber) {
 		super(rowNumber, lineNumber, stepNumber);
-		barrier = new CyclicBarrier(rowNumber*lineNumber+1, new Runnable() {
+		
+		barrierStart = new CyclicBarrier(rowNumber * lineNumber + 1, null);
+		barrierEnd = new CyclicBarrier(rowNumber * lineNumber + 1, new Runnable() {
 			@Override
 			public void run() {
 				currentField = new Field(futurField);
 			}
 		});
 
-		futurField = new Field(rowNumber, lineNumber);		
+		futurField = new Field(rowNumber, lineNumber);
 
-		for(int i = 0; i<currentField.getDepth(); i++){
-			for(int j = 0; j<currentField.getWidth(); j++){
+		for (int i = 0; i < currentField.getDepth(); i++) {
+			for (int j = 0; j < currentField.getWidth(); j++) {
 				new Thread(new Worker(i, j)).start();
 			}
 		}
 	}
 
-
 	// Calculate the next step of the simulation
-	public int nextStep(){
+	public void nextStep() {
 		try {
-			barrier.await();
+			// Donne l'ordre aux worker de commencer le travail
+			barrierStart.await();
+			// Attend que le travail des workers soit fini
+			barrierEnd.await();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,27 +46,34 @@ public class Simulator100Thread extends Simulator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return 0;
 	}
 
 	protected void endSimulation() {
-		barrier.reset();
+		barrierEnd.reset();
 	}
 
+	/**
+	 * Thread en charge de calculer l'état d'une case
+	 */
 	class Worker implements Runnable {
-		private int i,j;
+		private int i, j;
+		private boolean isAlive;
+
 		public Worker(int i, int j) {
 			super();
 			this.i = i;
 			this.j = j;
+			isAlive = false;
 		}
 
 		public void run() {
 			while (true) {
-				doWork();
-
 				try {
-					barrier.await();
+					// Attend l'odre de commencer
+					barrierStart.await();
+					doWork();		
+					// attent la fin de tous le threads
+					barrierEnd.await();
 				} catch (InterruptedException ex) {
 					break;
 				} catch (BrokenBarrierException ex) {
@@ -74,24 +88,19 @@ public class Simulator100Thread extends Simulator {
 			int nbadj = currentField.nbAdjacentTrue(i, j);
 
 			/**
-			 * Une cellule vide à l'étape n-1 et ayant exactement 3 
-			 * voisins sera occupée à l'étape suivante. 
-			 * (naissance liée à un environnement optimal)
+			 * Une cellule vide à l'étape n-1 et ayant exactement 3 voisins sera
+			 * occupée à l'étape suivante. (naissance liée à un environnement
+			 * optimal)
 			 */
-			if(nbadj == 3){
-				futurField.place(true, i, j);
+			if (nbadj == 3 || (nbadj == 2 && currentField.getState(i, j))) {
+				isAlive = true;
+			} else {
+				isAlive = false;
 			}
 
-			/**
-			 * Une cellule occupée à l'étape n-1 et ayant 2 ou 3 voisins sera maintenue 
-			 * à l'étape n sinon elle est vidée. 
-			 * (destruction par désertification ou surpopulation)
-			 */
-			else if(nbadj == 2 && futurField.getState(i, j)){
-				futurField.place(true, i, j);
-			}
-			else{ 
-				futurField.place(false, i, j);
+			futurField.place(isAlive, i, j);
+			if (isAlive) {
+				incAlive();
 			}
 		}
 	}
