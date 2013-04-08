@@ -20,10 +20,6 @@ public abstract class Simulator extends JFrame {
 
     public Simulator(int rowNumber, int lineNumber, int stepNumber)	{
     	setTitle("Jeux de la vie");
-    	//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    	
-    	//setContentPane(opPane);
-    	
     	
     	numberStep =  stepNumber;
     	

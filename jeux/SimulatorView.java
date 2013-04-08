@@ -92,6 +92,15 @@ public class SimulatorView extends JPanel {
         
         panelDown.add(btnStep);
         
+        JButton btnReset = new JButton("Reset"); 
+        btnReset.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				hook.reset();				
+			}
+		});
+        panelDown.add(btnReset);
+        
         validate();
         setVisible(true);
 	}
