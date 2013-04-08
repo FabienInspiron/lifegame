@@ -12,6 +12,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 
 
 public class SimulatorView extends JPanel {
@@ -19,14 +20,24 @@ public class SimulatorView extends JPanel {
     private final String POPULATION_PREFIX = "Population: ";
 	private FieldView fieldView;
 
-	//private Simulator hook;
+	private Simulator hook;
     
 	private Color red = Color.red;
 	private JLabel lblPopulation;
 	private JLabel lblStep;
 	
+    class simulationWorker extends SwingWorker<Void, Void>
+	{
+	    protected Void doInBackground() throws Exception
+	    {
+	    	hook.live();
+			return null;
+	    }
+	}
+    
+	
     public SimulatorView(int height, int width, final Simulator hook) {
-        //this.hook = hook;
+        this.hook = hook;
     	
         fieldView = new FieldView(height, width);
         setLayout(new BorderLayout());
@@ -65,7 +76,7 @@ public class SimulatorView extends JPanel {
         btnRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				hook.live();
+				new simulationWorker().execute();
 				
 			}
 		});

@@ -2,6 +2,7 @@ package jeux;
 
 import javax.swing.JFrame;
 
+
 public abstract class Simulator extends JFrame {
 	// The current state of the field.
     protected Field currentField;
@@ -16,6 +17,7 @@ public abstract class Simulator extends JFrame {
     // A graphical view of the simulation.
     private SimulatorView view;
     
+
     public Simulator(int rowNumber, int lineNumber, int stepNumber)	{
     	setTitle("Jeux de la vie");
     	//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,7 +34,8 @@ public abstract class Simulator extends JFrame {
     	// Add the simulator view to the frame
     	view = new SimulatorView(rowNumber, lineNumber, this);
     	add(view);
-    	
+    	pack();
+    	view.showStatus(currentStep, currentField, 0);
     	setVisible(true);
     }
     

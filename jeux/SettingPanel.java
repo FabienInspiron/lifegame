@@ -13,17 +13,22 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 public class SettingPanel extends JFrame {
 	private JTextField txflRowNumber;
 	private JTextField txflLineNumber;
 	private JTextField txflStepNumber;
 	
+	
 	/**
 	 * Create the option panel.
 	 */
 	public SettingPanel() {
 		super();
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 	    setSize(300, 200);
 		setTitle("Jeu de la vie");
 		JLabel lblNombreDeColonnes = new JLabel("Nombre de colonnes");
@@ -54,7 +59,6 @@ public class SettingPanel extends JFrame {
 				int stepNumber = Integer.parseInt(txflStepNumber.getText());
 				
 				Simulator sim = new SimulatorLinear(rowNumber, lineNumber, stepNumber);
-				//sim.show();
 			}
 		});
 
