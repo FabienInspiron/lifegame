@@ -24,6 +24,7 @@ public class SettingPanel extends JFrame {
 	private JRadioButton rdbtnMonoThread;
 	private JRadioButton rdbtnThread;
 	private JRadioButton rdbtnPartialThread;
+	private JRadioButton rdbtnQuatresThreads;
 	
 	
 	/**
@@ -63,13 +64,15 @@ public class SettingPanel extends JFrame {
 		rdbtnMonoThread = new JRadioButton("Mono Thread");
 		rdbtnMonoThread.setSelected(true);
 		
-		rdbtnThread = new JRadioButton("100% Thread");
+		rdbtnThread = new JRadioButton("Un thread par case");
 		
 		rdbtnPartialThread = new JRadioButton("Partial Thread");
+		rdbtnQuatresThreads = new JRadioButton("4 threads");
 		
 		buttonRadioGroup.add(rdbtnMonoThread);
 		buttonRadioGroup.add(rdbtnThread);
 		buttonRadioGroup.add(rdbtnPartialThread);
+		buttonRadioGroup.add(rdbtnQuatresThreads);
 		
 		JLabel lblType = new JLabel("Type :");
 
@@ -89,6 +92,9 @@ public class SettingPanel extends JFrame {
 				}
 				else if (rdbtnThread.isSelected())	{
 					new Simulator100Thread(rowNumber, lineNumber, stepNumber);
+				}
+				else if (rdbtnQuatresThreads.isSelected())	{
+					new SimulatorQuart(rowNumber, lineNumber, stepNumber);
 				}
 			}
 		});
@@ -119,7 +125,8 @@ public class SettingPanel extends JFrame {
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(rdbtnThread)
 						.addComponent(rdbtnPartialThread)
-						.addComponent(rdbtnMonoThread))
+						.addComponent(rdbtnMonoThread)
+						.addComponent(rdbtnQuatresThreads))
 					.addGap(161))
 		);
 		groupLayout.setVerticalGroup(
@@ -145,6 +152,8 @@ public class SettingPanel extends JFrame {
 						.addComponent(lblType))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(rdbtnPartialThread)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(rdbtnQuatresThreads)
 					.addPreferredGap(ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
 					.addComponent(btnOk)
 					.addGap(31))

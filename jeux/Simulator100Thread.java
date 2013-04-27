@@ -4,8 +4,10 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 public class Simulator100Thread extends Simulator {
+	
 	// Barrière annoncant le début du travail des trheads 
 	final CyclicBarrier barrierStart;
+	
 	// Barrière attendant la fin du travail des threads
 	final CyclicBarrier barrierEnd;
 
@@ -22,7 +24,7 @@ public class Simulator100Thread extends Simulator {
 				currentField = new Field(futurField);
 			}
 		});
-
+		
 		futurField = new Field(rowNumber, lineNumber);
 
 		for (int i = 0; i < currentField.getDepth(); i++) {
