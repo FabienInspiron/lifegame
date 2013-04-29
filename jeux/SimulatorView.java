@@ -25,6 +25,7 @@ public class SimulatorView extends JPanel {
 	private Color red = Color.red;
 	private JLabel lblPopulation;
 	private JLabel lblStep;
+	private JLabel lblTime;
 	
     class simulationWorker extends SwingWorker<Void, Void>
 	{
@@ -48,6 +49,7 @@ public class SimulatorView extends JPanel {
         
         lblPopulation = new JLabel("Population");
         lblStep = new JLabel("Step");
+        lblTime = new JLabel("Time");
         
         GroupLayout gl_panel = new GroupLayout(panelTop);
         gl_panel.setHorizontalGroup(
@@ -57,7 +59,9 @@ public class SimulatorView extends JPanel {
         			.addComponent(lblPopulation)
         			.addGap(50)
         			.addComponent(lblStep)
-        			.addGap(172))
+        			.addGap(100)
+        			.addComponent(lblTime)
+        			.addGap(30))
         );
         gl_panel.setVerticalGroup(
         	gl_panel.createParallelGroup(Alignment.TRAILING)
@@ -65,7 +69,8 @@ public class SimulatorView extends JPanel {
         			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         			.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
         				.addComponent(lblPopulation)
-        				.addComponent(lblStep)))
+        				.addComponent(lblStep)
+        				.addComponent(lblTime)))
         );
         panelTop.setLayout(gl_panel);
         
@@ -77,7 +82,6 @@ public class SimulatorView extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new simulationWorker().execute();
-				
 			}
 		});
         panelDown.add(btnRun);
@@ -119,7 +123,9 @@ public class SimulatorView extends JPanel {
             setVisible(true);
         }
 
-        lblStep.setText(STEP_PREFIX + step);
+        lblStep.setText(STEP_PREFIX + step + " /" + hook.getNbStep());
+        lblTime.setText("Time : " + hook.getTime() + " ms");
+        
         fieldView.preparePaint();
 
         for (int row = 0; row < field.getDepth(); row++) {
