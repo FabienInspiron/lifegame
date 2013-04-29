@@ -49,7 +49,6 @@ public abstract class Simulator extends JFrame {
 	}
 
 	public void live(int stepNumber) {
-		int population = 0;
 		tempsDepart = System.currentTimeMillis();
 		
     	while (currentStep < stepNumber) {
@@ -58,7 +57,7 @@ public abstract class Simulator extends JFrame {
     	
     	System.out.println("Executé en " + (System.currentTimeMillis() - tempsDepart) + " millisecondes");
     	
-    	view.showStatus(currentStep, currentField, population);
+    	view.showStatus(currentStep, currentField, alive);
 	}
 
 	public void liveOneStep()	{
