@@ -155,6 +155,7 @@ public class SettingPanel extends JFrame {
 		setContentPane(jContentPane);
 		
 		pack();
+		setLocationRelativeTo(null);
 	}
 	
 	public static void main(String[] args) {
