@@ -7,8 +7,9 @@ range J = 0..NBColonne-1
 range E = 0..NBEtape-1
 
 const NBCase = NBLigne*NBColonne
+const NBThread = NBCase
 
-BARRIERE = (open -> close -> BARRIERE).
+BARRIERE[b:0..NBThread-1] = (when (b >= NBThread-1) open -> BARRIERE[0]).
 
 //Grille de jeu avec GRILLE[ligne][colonne][etape]
 GRILLE = GRILLE[0][0][0],
@@ -17,7 +18,7 @@ GRILLE[i:I][j:J][e:E] =
 	|when (i==NBLigne) && (j==NBColonne) etapeSuivante -> GRILLE[0][0][e+1]
 	|caseSuivante -> GRILLE[i][j+1][e]).
 
-WORKER[e:E] = (open -> calculerNouvelleValeur -> WORKER[e+1]).
+WORKER[e:E] = (open -> calculerNouvelleValeur -> BARRIERE[] -> open -> WORKER[e+1]).
 
 // Création de nos processus en parallèle avec les barrières
 ||JEUX = (GRILLE || BARRIERE || [p:0..NBCase-1]:WORKER).
