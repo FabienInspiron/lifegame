@@ -11,6 +11,8 @@ public class Simulator100Thread extends Simulator {
 	// Barrière attendant la fin du travail des threads
 	final CyclicBarrier barrierEnd;
 
+	int nbThreadCree = 0;
+	
 	// The futur state of the field.
 	Field futurField;
 
@@ -30,6 +32,8 @@ public class Simulator100Thread extends Simulator {
 		for (int i = 0; i < currentField.getDepth(); i++) {
 			for (int j = 0; j < currentField.getWidth(); j++) {
 				new Thread(new Worker(i, j)).start();
+				nbThreadCree++;
+				System.out.println(nbThreadCree);
 			}
 		}
 	}

@@ -8,7 +8,7 @@ public class SimulatorQuart extends Simulator {
 	public static final int NB_THREADS = 4;
 
 	// Barrière annoncant le début du travail des trheads
-	final CyclicBarrier barrierStart;
+	//final CyclicBarrier barrierStart;
 
 	// Barrière attendant la fin du travail des threads
 	final CyclicBarrier barrierEnd;
@@ -19,8 +19,8 @@ public class SimulatorQuart extends Simulator {
 	public SimulatorQuart(int rowNumber, int lineNumber, int stepNumber) {
 		super(rowNumber, lineNumber, stepNumber);
 
-		barrierStart = new CyclicBarrier(NB_THREADS + 1,
-				null);
+		//barrierStart = new CyclicBarrier(NB_THREADS + 1,
+				//null);
 		barrierEnd = new CyclicBarrier(NB_THREADS + 1,
 				new Runnable() {
 					@Override
@@ -41,7 +41,7 @@ public class SimulatorQuart extends Simulator {
 	public void nextStep() {
 		try {
 			// Donne l'ordre aux worker de commencer le travail
-			barrierStart.await();
+			//barrierStart.await();
 			// Attend que le travail des workers soit fini
 			barrierEnd.await();
 		} catch (InterruptedException e) {
@@ -83,7 +83,7 @@ public class SimulatorQuart extends Simulator {
 			while (true) {
 				try {
 					// Attend l'odre de commencer
-					barrierStart.await();
+					//barrierStart.await();
 					
 					doWork();
 					
