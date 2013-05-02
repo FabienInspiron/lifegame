@@ -9,11 +9,20 @@ range E = 0..NBEtape-1
 const NBCase = NBLigne*NBColonne
 const NBThread = NBCase
 
+<<<<<<< HEAD
+BARRIERE[b:0..NBThread-1] = (when (b >= NBThread-1) open -> BARRIERE[0]).
+=======
 BARRIERE = (open -> BARRIERE[0]),
 BARRIERE[c:0..NBCase] = (await -> BARRIERE[c+1]
 						| when (c == NBCase) open -> BARRIERE[0]).
+>>>>>>> 16159b2d93a1112d5916c59c5b6fb079ebdf6998
 
+
+<<<<<<< HEAD
+WORKER[e:E] = (open -> calculerNouvelleValeur -> BARRIERE[] -> open -> WORKER[e+1]).
+=======
 WORKER = (open -> calculer -> await -> WORKER).
+>>>>>>> 16159b2d93a1112d5916c59c5b6fb079ebdf6998
 
 AFFICHEUR = (open -> await -> affiche -> AFFICHEUR).
 
