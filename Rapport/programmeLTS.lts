@@ -11,12 +11,11 @@ const NBThread = NBCase
 
 set Actions = {open, await}
 
-BARRIERE = (open -> BARRIERE[0][0]),
+BARRIERE = (open -> BARRIERE[0]),
 
-BARRIERE[c:0..NBCase][e:0..NBEtape] = (
-		  when (c < NBCase) await -> BARRIERE[c+1][e]
-		| when (c == NBCase) && (e!=NBEtape) open -> BARRIERE[0][e+1]
-		| when (e == NBEtape) fin -> STOP)
+BARRIERE[c:0..NBCase] = (
+		  when (c < NBCase) await -> BARRIERE[c+1]
+		| when (c == NBCase) open -> BARRIERE[0])
 		+ Actions.
 
 WORKER = (open -> calculer -> await -> WORKER)
