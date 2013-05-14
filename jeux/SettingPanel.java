@@ -10,17 +10,18 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-import javax.swing.JRadioButton;
 
 public class SettingPanel extends JFrame {
 	private JTextField txflRowNumber;
 	private JTextField txflLineNumber;
 	private JTextField txflStepNumber;
+	private JTextField txflNbRow;
+	private JTextField txflNbCol;
 	private JRadioButton rdbtnMonoThread;
 	private JRadioButton rdbtnThread;
 	private JRadioButton rdbtnPartialThread;
@@ -56,6 +57,16 @@ public class SettingPanel extends JFrame {
 		txflStepNumber.setHorizontalAlignment(SwingConstants.CENTER);
 		txflStepNumber.setColumns(10);
 		
+		txflNbRow = new JTextField();
+		txflNbRow.setText("8");
+		txflNbRow.setHorizontalAlignment(SwingConstants.CENTER);
+		txflNbRow.setColumns(10);
+		
+		txflNbCol = new JTextField();
+		txflNbCol.setText("8");
+		txflNbCol.setHorizontalAlignment(SwingConstants.CENTER);
+		txflNbCol.setColumns(10);
+		
 
 		JPanel jContentPane = new JPanel();     
 		
@@ -84,17 +95,22 @@ public class SettingPanel extends JFrame {
 				int lineNumber = Integer.parseInt(txflLineNumber.getText());
 				int stepNumber = Integer.parseInt(txflStepNumber.getText());
 				
+				int threadRowNumber = Integer.parseInt(txflNbRow.getText());
+				int threadColNumber = Integer.parseInt(txflNbCol.getText());
+				
 				if (rdbtnMonoThread.isSelected())	{
-					new SimulatorLinear(rowNumber, lineNumber, stepNumber);
+					//new SimulatorLinear(rowNumber, lineNumber, stepNumber);
+					new SimulatorProducer(rowNumber, lineNumber, stepNumber);
 				}
 				else if (rdbtnPartialThread.isSelected())	{
-					return;
+					new SimulatorNThread(rowNumber, lineNumber, stepNumber, rowNumber/2, lineNumber/2);
 				}
 				else if (rdbtnThread.isSelected())	{
 					new Simulator100Thread(rowNumber, lineNumber, stepNumber);
 				}
 				else if (rdbtnQuatresThreads.isSelected())	{
-					new SimulatorQuart(rowNumber, lineNumber, stepNumber);
+					//new SimulatorQuart(rowNumber, lineNumber, stepNumber);
+					new SimulatorProducer4Th(rowNumber, lineNumber, stepNumber);
 				}
 			}
 		});
@@ -113,6 +129,8 @@ public class SettingPanel extends JFrame {
 						.addComponent(txflStepNumber, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(txflLineNumber, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(txflRowNumber, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						//.addComponent(txflNbRow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						//.addComponent(txflNbCol, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(77, Short.MAX_VALUE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap(209, Short.MAX_VALUE)
@@ -144,6 +162,14 @@ public class SettingPanel extends JFrame {
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblNombreDtape)
 						.addComponent(txflStepNumber, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+//					.addGap(18)
+//					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+//						.addComponent(lblNombreDtape)
+//						.addComponent(txflNbRow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+//					.addGap(18)
+//					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+//						.addComponent(lblNombreDtape)
+//						.addComponent(txflNbCol, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addComponent(rdbtnMonoThread)
 					.addPreferredGap(ComponentPlacement.RELATED)

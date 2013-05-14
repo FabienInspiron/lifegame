@@ -11,8 +11,6 @@ public class Simulator100Thread extends Simulator {
 	// Barrière attendant la fin du travail des threads
 	final CyclicBarrier barrierEnd;
 
-	int nbThreadCree = 0;
-	
 	// The futur state of the field.
 	Field futurField;
 
@@ -32,8 +30,6 @@ public class Simulator100Thread extends Simulator {
 		for (int i = 0; i < currentField.getDepth(); i++) {
 			for (int j = 0; j < currentField.getWidth(); j++) {
 				new Thread(new Worker(i, j)).start();
-				nbThreadCree++;
-				System.out.println(nbThreadCree);
 			}
 		}
 	}
@@ -42,7 +38,7 @@ public class Simulator100Thread extends Simulator {
 	public void nextStep() {
 		try {
 			// Donne l'ordre aux worker de commencer le travail
-			barrierStart.await();
+			//barrierStart.await();
 			// Attend que le travail des workers soit fini
 			barrierEnd.await();
 		} catch (InterruptedException e) {
@@ -76,7 +72,7 @@ public class Simulator100Thread extends Simulator {
 			while (true) {
 				try {
 					// Attend l'odre de commencer
-					barrierStart.await();
+					//barrierStart.await();
 					doWork();		
 					// attent la fin de tous le threads
 					barrierEnd.await();
@@ -98,11 +94,7 @@ public class Simulator100Thread extends Simulator {
 			 * occupée à l'étape suivante. (naissance liée à un environnement
 			 * optimal)
 			 */
-			if (nbadj == 3 || (nbadj == 2 && currentField.getState(i, j))) {
-				isAlive = true;
-			} else {
-				isAlive = false;
-			}
+			isAlive = (nbadj == 3 || (nbadj == 2 && currentField.getState(i, j)));
 
 			futurField.place(isAlive, i, j);
 			if (isAlive) {
