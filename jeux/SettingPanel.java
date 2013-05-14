@@ -26,7 +26,8 @@ public class SettingPanel extends JFrame {
 	private JRadioButton rdbtnThread;
 	private JRadioButton rdbtnPartialThread;
 	private JRadioButton rdbtnQuatresThreads;
-	
+	private JRadioButton rdbtnProdCons100;
+	private JRadioButton rdbtnProdConsQuart;
 	
 	/**
 	 * Create the option panel.
@@ -79,11 +80,15 @@ public class SettingPanel extends JFrame {
 		
 		rdbtnPartialThread = new JRadioButton("Partial Thread");
 		rdbtnQuatresThreads = new JRadioButton("4 threads");
+		rdbtnProdCons100 = new JRadioButton("Prod/cons 100%");
+		rdbtnProdConsQuart = new JRadioButton("Prod/cons 4");
 		
 		buttonRadioGroup.add(rdbtnMonoThread);
 		buttonRadioGroup.add(rdbtnThread);
 		buttonRadioGroup.add(rdbtnPartialThread);
 		buttonRadioGroup.add(rdbtnQuatresThreads);
+		buttonRadioGroup.add(rdbtnProdCons100);
+		buttonRadioGroup.add(rdbtnProdConsQuart);
 		
 		JLabel lblType = new JLabel("Type :");
 
@@ -99,8 +104,7 @@ public class SettingPanel extends JFrame {
 				int threadColNumber = Integer.parseInt(txflNbCol.getText());
 				
 				if (rdbtnMonoThread.isSelected())	{
-					//new SimulatorLinear(rowNumber, lineNumber, stepNumber);
-					new SimulatorProducer(rowNumber, lineNumber, stepNumber);
+					new SimulatorLinear(rowNumber, lineNumber, stepNumber);
 				}
 				else if (rdbtnPartialThread.isSelected())	{
 					new SimulatorNThread(rowNumber, lineNumber, stepNumber, rowNumber/2, lineNumber/2);
@@ -109,7 +113,12 @@ public class SettingPanel extends JFrame {
 					new Simulator100Thread(rowNumber, lineNumber, stepNumber);
 				}
 				else if (rdbtnQuatresThreads.isSelected())	{
-					//new SimulatorQuart(rowNumber, lineNumber, stepNumber);
+					new SimulatorQuart(rowNumber, lineNumber, stepNumber);
+				}
+				else if (rdbtnProdCons100.isSelected())	{
+					new SimulatorProducer(rowNumber, lineNumber, stepNumber);
+				}
+				else if (rdbtnProdConsQuart.isSelected())	{
 					new SimulatorProducer4Th(rowNumber, lineNumber, stepNumber);
 				}
 			}
@@ -144,7 +153,9 @@ public class SettingPanel extends JFrame {
 						.addComponent(rdbtnThread)
 						.addComponent(rdbtnPartialThread)
 						.addComponent(rdbtnMonoThread)
-						.addComponent(rdbtnQuatresThreads))
+						.addComponent(rdbtnQuatresThreads)
+						.addComponent(rdbtnProdCons100)
+						.addComponent(rdbtnProdConsQuart))
 					.addGap(161))
 		);
 		groupLayout.setVerticalGroup(
@@ -180,6 +191,10 @@ public class SettingPanel extends JFrame {
 					.addComponent(rdbtnPartialThread)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(rdbtnQuatresThreads)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(rdbtnProdCons100)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(rdbtnProdConsQuart)
 					.addPreferredGap(ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
 					.addComponent(btnOk)
 					.addGap(31))
