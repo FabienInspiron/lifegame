@@ -1,43 +1,102 @@
 package jeux;
 
-/**
- * Classe de gestion des processus par les voisins
- * Principe : Une case attend que ses voisins soient calculées pour 
- * calculer sa propre valeur a son tour.
- * 
- * @author belli
- *
- */
+import java.util.concurrent.Semaphore;
+
+
 public class SimulatorVoisin extends Simulator {
 
-	public SimulatorVoisin(int rowNumber, int lineNumber, int stepNumber) {
-		super(rowNumber, lineNumber, stepNumber);
-	}
+    private Producer[][] producers;
+        
+    public int calculated;
 
-	@Override
-	public void nextStep() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/**
-	 * L'algorithme de calcul est le suivant :
-	 * Pour une case donnée il faut verifier que ses voisins sont pret.
-	 * 	1-2-3
-	 * 	4-5-6
-	 * 	7-8-9
-	 * 
-	 * Il faut donner des prioritées de calcul à chacun, sinon tout le monde attendrai tout
-	 * le monde => Interblocage.
-	 * 
-	 * Solution : Pour la case 1, on calcul les cases 4, 5 et 2, dans cet ordre.
-	 * Pour la case 2 il faut calcule les cases 1, 4, 5, 6, 3. 
-	 * Mais les cases 4 et 5 ont déja été calculées, donc pas de nouveau calcul.
-	 * Et ainsi de suite...
-	 * 
-	 * Arrivé aux derniere cases, plus de calcul nécessaire car les données sont à jour.
-	 * 
-	 * Le but etant de savoir si un case est a jour ou pas.
-	 */
+    public SimulatorVoisin(int rowNumber, int lineNumber, int stepNumber) {
+        super(rowNumber, lineNumber, stepNumber);
 
+        producers = new Producer[lineNumber][rowNumber];
+        
+        calculated = 0;
+
+        for (int i = 0; i < currentField.getDepth(); i++) {
+            for (int j = 0; j < currentField.getWidth(); j++) {
+                producers[i][j] = new Producer(i, j);
+                producers[i][j].start();
+            }
+        }
+    }
+
+    // Calculate the next step of the simulation
+    @Override
+    public void nextStep() {
+        Field tmp = new Field(currentField);
+        Producer p;
+
+        for (int i = 0; i < tmp.getDepth(); i++) {
+            for (int j = 0; j < tmp.getWidth(); j++) {
+                p = producers[i][j];
+                tmp.place(p.readValue(tmp), i, j);
+            }
+        }
+        currentField = tmp;
+    }
+
+    @Override
+    protected void endSimulation() {
+        for (int i = 0; i < currentField.getDepth(); i++) {
+            for (int j = 0; j < currentField.getWidth(); j++) {
+                producers[i][j].stop();
+            }
+        }
+    }
+    
+    /*@Override
+    public void reset() {
+        super.reset();
+        for (int i = 0; i < currentField.getDepth(); i++) {
+            for (int j = 0; j < currentField.getWidth(); j++) {
+                producers[i][j].setCurrentField(currentField);
+            }
+        }
+    }*/
+    
+    class Producer extends Thread {
+        private Semaphore ready;
+        private boolean valueN1, valueN2;
+        private int i, j;
+
+        public Producer(int i, int j) {
+            ready = new Semaphore(0);
+            valueN1 = valueN2 = false;
+            this.i = i;
+            this.j = j;
+        }
+
+        public void run() {
+            int nbadj = 0;
+            while (true) {
+            	
+                nbadj = currentField.nbAdjacentTrue(i, j);
+                valueN1 = (nbadj == 3 || (nbadj == 2 && currentField.getState(i, j)));
+                synchronized (this) {
+                    ready.release();
+                    try {
+                        ready.acquire();
+                    } catch (InterruptedException e) {
+                        System.out.println("oups : " + e);
+                        return;
+                    }
+                }
+            }
+        }
+
+        public synchronized boolean readValue(Field nextField) {
+            try {
+                ready.acquire();
+            } catch (InterruptedException ex) {
+            }
+            boolean tmp = valueN1;
+            currentField = nextField;
+            notify();
+            return tmp;
+        }
+    }
 }

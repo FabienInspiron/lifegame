@@ -36,12 +36,15 @@ public class SimulatorProducer4Th extends Simulator {
             producers[i].await();
         }
         currentField = futurField;
+        synchronized (this) {
+			notifyAll();
+		}
     }
 
     @Override
     protected void endSimulation() {
         for (int i = 0; i < 4; i++) {
-                producers[i].stop();
+                producers[i].interrupt();
         }
     }
     
@@ -98,10 +101,10 @@ public class SimulatorProducer4Th extends Simulator {
     						incAlive();
     					}
     				}
-                synchronized (this) {
+                synchronized (SimulatorProducer4Th.this) {
                     ready.release();
                     try {
-                        this.wait();
+                        SimulatorProducer4Th.this.wait();
                     } catch (InterruptedException e) {
                         System.out.println("oups : " + e);
                         return;
@@ -110,12 +113,11 @@ public class SimulatorProducer4Th extends Simulator {
             }
         }
 
-        public synchronized void await() {
+        public void await() {
             try {
                 ready.acquire();
             } catch (InterruptedException ex) {
             }
-            notify();
         }
     }
 }

@@ -29,10 +29,13 @@ public class SimulatorProducer extends Simulator {
         for (int i = 0; i < tmp.getDepth(); i++) {
             for (int j = 0; j < tmp.getWidth(); j++) {
                 p = producers[i][j];
-                tmp.place(p.readValue(tmp), i, j);
+                tmp.place(p.readValue(), i, j);
             }
         }
         currentField = tmp;
+        synchronized (this) {
+			notifyAll();
+		}
     }
 
     @Override
@@ -44,15 +47,15 @@ public class SimulatorProducer extends Simulator {
         }
     }
     
-    /*@Override
+    @Override
     public void reset() {
         super.reset();
         for (int i = 0; i < currentField.getDepth(); i++) {
             for (int j = 0; j < currentField.getWidth(); j++) {
-                producers[i][j].setCurrentField(currentField);
+                producers[i][j].start();
             }
         }
-    }*/
+    }
     
     class Producer extends Thread {
         private Semaphore ready;
@@ -71,10 +74,10 @@ public class SimulatorProducer extends Simulator {
             while (true) {
                 nbadj = currentField.nbAdjacentTrue(i, j);
                 value = (nbadj == 3 || (nbadj == 2 && currentField.getState(i, j)));
-                synchronized (this) {
+                synchronized (SimulatorProducer.this) {
                     ready.release();
                     try {
-                        this.wait();
+                    	SimulatorProducer.this.wait();
                     } catch (InterruptedException e) {
                         System.out.println("oups : " + e);
                         return;
@@ -83,15 +86,12 @@ public class SimulatorProducer extends Simulator {
             }
         }
 
-        public synchronized boolean readValue(Field nextField) {
-            try {
+        public boolean readValue() {
+        	try {
                 ready.acquire();
             } catch (InterruptedException ex) {
             }
-            boolean tmp = value;
-            currentField = nextField;
-            notify();
-            return tmp;
+            return value;
         }
     }
 }

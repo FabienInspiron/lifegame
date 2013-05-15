@@ -9,7 +9,7 @@ public abstract class Simulator extends JFrame {
     private SettingPanel opPane;
     
     // The current step of the simulation.
-    private int currentStep = 0;
+    protected int currentStep = 0;
     
     // The number of step needed
     private int numberStep;
