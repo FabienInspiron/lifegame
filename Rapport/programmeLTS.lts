@@ -1,0 +1,33 @@
+const NBLigne = 3
+const NBColonne = 3
+
+const NBEtape = 2
+range I = 0..NBLigne-1
+range J = 0..NBColonne-1
+range E = 0..NBEtape-1
+
+const NBCase = NBLigne*NBColonne
+const NBThread = NBCase
+
+set Actions = {open, await}
+
+BARRIERE = (open -> BARRIERE[0]),
+
+BARRIERE[c:0..NBCase] = (
+		  when (c < NBCase) await -> BARRIERE[c+1]
+		| when (c == NBCase) open -> BARRIERE[0])
+		+ Actions.
+
+WORKER = (open -> calculer -> await -> WORKER)
+		+Actions.
+
+AFFICHEUR = (open -> await -> affiche -> AFFICHEUR) 
+			+Actions.
+
+property OPEN = (open -> calculer -> await -> OPEN).
+progress OUVRIR = {open}
+
+// Creation de nos processus en parallele avec les barrieres
+||JEUX = (BARRIERE || [p:0..NBThread-1]:WORKER)
+		/{open/[k:0..NBThread-1].open,
+		[l:0..NBThread-1].await/await}.
