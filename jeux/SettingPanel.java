@@ -73,15 +73,13 @@ public class SettingPanel extends JFrame {
 
 		ButtonGroup buttonRadioGroup = new ButtonGroup();
 
-		rdbtnMonoThread = new JRadioButton("Mono Thread");
+		rdbtnMonoThread = new JRadioButton("Linéaire");
 		rdbtnMonoThread.setSelected(true);
-
-		rdbtnThread = new JRadioButton("Un thread par case");
-
-		rdbtnPartialThread = new JRadioButton("Partial Thread");
+		rdbtnThread = new JRadioButton("Un thread par case avec barrière");
+		rdbtnPartialThread = new JRadioButton("N cases par threads");
 		rdbtnQuatresThreads = new JRadioButton("4 threads");
 		rdbtnProdCons100 = new JRadioButton("Prod/cons 100%");
-		rdbtnProdConsQuart = new JRadioButton("Prod/cons 4");
+		rdbtnProdConsQuart = new JRadioButton("Prod/cons 4 thread");
 
 		buttonRadioGroup.add(rdbtnMonoThread);
 		buttonRadioGroup.add(rdbtnThread);
@@ -138,8 +136,6 @@ public class SettingPanel extends JFrame {
 						.addComponent(txflStepNumber, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(txflLineNumber, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(txflRowNumber, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						//.addComponent(txflNbRow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						//.addComponent(txflNbCol, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(77, Short.MAX_VALUE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap(209, Short.MAX_VALUE)
@@ -173,15 +169,6 @@ public class SettingPanel extends JFrame {
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblNombreDtape)
 						.addComponent(txflStepNumber, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-//					.addGap(18)
-//					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-//						.addComponent(lblNombreDtape)
-//						.addComponent(txflNbRow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-//					.addGap(18)
-//					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-//						.addComponent(lblNombreDtape)
-//						.addComponent(txflNbCol, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
 					.addComponent(rdbtnMonoThread)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
